@@ -1,0 +1,14 @@
+{
+  "name": "rec",
+  "version": "0.0.2",
+  "main": "rec.js",
+  "ignore": ["test", "index.html"],
+  "dependencies": {
+    "jquery": "x",
+    "underscore": "x"
+  },
+  "devDependencies": {
+    "mocha": "x",
+    "chai": "x"
+  }
+}
