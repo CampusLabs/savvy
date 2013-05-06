@@ -56,8 +56,11 @@
     return $(this).each(function () {
       var $self = $(this);
       var data = $self.data();
+
+      // If `savvyContent` hasn't been set, there is nothing to do here.
+      if (data.savvyContent == null) return;
       var method = $self.is(':input') ? 'val' : 'html';
-      $self[method](data.savvyContent).attr('class', data.savvyClass);
+      $self.attr('class', data.savvyClass)[method](data.savvyContent);
     });
   };
 })();
