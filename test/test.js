@@ -17,7 +17,7 @@
   before(function () {
     this.html = '<strong>Save</strong>';
     this.classes = 'green button';
-    this.$el = $('<div>').html(this.html).addClass(this.classes);
+    this.$el = $('<button>').html(this.html).addClass(this.classes);
   });
 
   describe('$el.savvy(jqXhr, options)', function () {

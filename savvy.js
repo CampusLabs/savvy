@@ -21,7 +21,7 @@
     options = _.extend({}, Savvy.defaults, options);
     return $(this).savvyReset().each(function () {
       var $self = $(this);
-      var method = $self.is(':input') ? 'val' : 'html';
+      var method = $self.is(':input:not(button)') ? 'val' : 'html';
       $self
         .data({
           savvyJqXhr: jqXhr,
@@ -59,7 +59,7 @@
 
       // If `savvyContent` hasn't been set, there is nothing to do here.
       if (data.savvyContent == null) return;
-      var method = $self.is(':input') ? 'val' : 'html';
+      var method = $self.is(':input:not(button)') ? 'val' : 'html';
       $self.attr('class', data.savvyClass)[method](data.savvyContent);
     });
   };
