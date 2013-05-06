@@ -23,11 +23,11 @@
   describe('$el.savvy(jqXhr, options)', function () {
     before(function () {
       _.extend(Savvy.defaults, {
-        errorHtml: 'Whoops!',
+        errorContent: 'Whoops!',
         errorClass: 'it broked'
       });
       this.options = _.defaults({
-        savingHtml: 'Saving the thing',
+        savingContent: 'Saving the thing',
         savingClass: 'my saving classes'
       }, Savvy.defaults);
     });
@@ -38,7 +38,7 @@
       });
 
       it('replaces $el html with "saving" html', function () {
-        expect(this.$el.html()).to.equal(this.options.savingHtml);
+        expect(this.$el.html()).to.equal(this.options.savingContent);
       });
 
       it('adds saving classes to $el', function () {
@@ -54,7 +54,7 @@
       });
 
       it('replaces $el html with "saved" html on success', function () {
-        expect(this.$el.html()).to.equal(this.options.savedHtml);
+        expect(this.$el.html()).to.equal(this.options.savedContent);
       });
 
       it('adds "saved" classes to $el on success', function () {
@@ -75,7 +75,7 @@
       });
 
       it('replaces $el html with "error" html on error', function () {
-        expect(this.$el.html()).to.equal(this.options.errorHtml);
+        expect(this.$el.html()).to.equal(this.options.errorContent);
       });
 
       it('adds "error" classes to $el on error', function () {

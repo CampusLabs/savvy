@@ -7,11 +7,11 @@
 
   var Savvy = window.Savvy = {
     defaults: {
-      savingHtml: 'Saving...',
+      savingContent: 'Saving...',
       savingClass: 'js-savvy-saving',
-      savedHtml: 'Saved',
+      savedContent: 'Saved',
       savedClass: 'js-savvy-saved',
-      errorHtml: 'Error',
+      errorContent: 'Error',
       errorClass: 'js-savvy-error',
       duration: -1
     }
@@ -21,21 +21,22 @@
     options = _.extend({}, Savvy.defaults, options);
     return $(this).savvyReset().each(function () {
       var $self = $(this);
+      var method = $self.is(':input') ? 'val' : 'html';
       $self
         .data({
           savvyJqXhr: jqXhr,
-          savvyHtml: $self.html(),
+          savvyContent: $self[method](),
           savvyClass: $self.attr('class')
         })
-        .html(options.savingHtml).addClass(options.savingClass);
+        .addClass(options.savingClass)[method](options.savingContent);
       jqXhr
         .done(function () {
           if ($self.data('savvyJqXhr') !== jqXhr) return;
-          $self.html(options.savedHtml).addClass(options.savedClass);
+          $self.addClass(options.savedClass)[method](options.savedContent);
         })
         .fail(function () {
           if ($self.data('savvyJqXhr') !== jqXhr) return;
-          $self.html(options.errorHtml).addClass(options.errorClass);
+          $self.addClass(options.errorClass)[method](options.errorContent);
         })
         .always(function () {
           if ($self.data('savvyJqXhr') !== jqXhr) return;
@@ -55,7 +56,8 @@
     return $(this).each(function () {
       var $self = $(this);
       var data = $self.data();
-      $self.html(data.savvyHtml).attr('class', data.savvyClass);
+      var method = $self.is(':input') ? 'val' : 'html';
+      $self[method](data.savvyContent).attr('class', data.savvyClass);
     });
   };
 })();
