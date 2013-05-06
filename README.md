@@ -2,7 +2,7 @@
 
 The save button your save button could be like.
 
-[Demo](http://orgsync.github.com/savvy) | [Tests](http://orgsync.github.com/savvy/test)
+[Demo](http://orgsync.github.io/savvy) | [Tests](http://orgsync.github.io/savvy/test)
 
 ## Install
 
