@@ -16,7 +16,7 @@ Savvy.
 ...or use [bower](https://github.com/twitter/bower)...
 
 ```
-bower install rec
+bower install savvy
 ```
 
 ...and get the JavaScript file from `components/savvy/savvy.js`.
