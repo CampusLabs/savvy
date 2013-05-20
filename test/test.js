@@ -1,106 +1,74 @@
 (function () {
   'use strict';
 
-  var $ = window.jQuery;
-  var _ = window._;
-  var chai = window.chai;
-  var mocha = window.mocha;
-  var Savvy = window.Savvy;
-
   mocha.setup('bdd');
   var expect = chai.expect;
 
-  var before = window.before;
-  var describe = window.describe;
-  var it = window.it;
-
   before(function () {
-    this.html = '<strong>Save</strong>';
+    this.content = '<strong>Save</strong>';
     this.classes = 'green button';
-    this.$el = $('<button>').html(this.html).addClass(this.classes);
+    this.$el = $('<button>').html(this.content).addClass(this.classes);
+    this.dfd = new $.Deferred();
+    this.options = {
+      pendingContent: 'Working...',
+      doneContent: 'Yay!',
+      failContent: 'Whoops',
+      duration: 1
+    };
+    this.savvy = new Savvy(this.$el, this.dfd, this.options);
   });
 
-  describe('$el.savvy(jqXhr, options)', function () {
-    before(function () {
-      _.extend(Savvy.defaults, {
-        errorContent: 'Whoops!',
-        errorClass: 'it broked'
-      });
-      this.options = _.defaults({
-        savingContent: 'Saving the thing',
-        savingClass: 'my saving classes'
-      }, Savvy.defaults);
+  describe('new Savvy(el, dfd, options)', function () {
+    it('attaches $el to the instance', function () {
+      expect(this.savvy.$el).to.equal(this.$el);
     });
 
-    describe('immediately', function () {
-      before(function () {
-        this.$el.savvy(new $.Deferred(), this.options);
-      });
-
-      it('replaces $el html with "saving" html', function () {
-        expect(this.$el.html()).to.equal(this.options.savingContent);
-      });
-
-      it('adds saving classes to $el', function () {
-        expect(this.$el.attr('class')).to.include(this.options.savingClass);
-      });
+    it('sets the correct content method', function () {
+      expect(this.savvy.method).to.equal('html');
+      expect((new Savvy('<input>')).method).to.equal('val');
     });
 
-    describe('after success', function () {
-      before(function () {
-        var dfd = new $.Deferred();
-        this.$el.savvy(dfd, this.options);
-        dfd.resolve();
-      });
-
-      it('replaces $el html with "saved" html on success', function () {
-        expect(this.$el.html()).to.equal(this.options.savedContent);
-      });
-
-      it('adds "saved" classes to $el on success', function () {
-        expect(this.$el.attr('class')).to.include(this.options.savedClass);
-      });
-
-      it('removes "saving" classes on $el', function () {
-        expect(this.$el.attr('class'))
-          .to.not.include(this.options.savingClass);
-      });
+    it('sets the dfd object', function () {
+      expect(this.savvy.dfd).to.equal(this.dfd);
     });
 
-    describe('after error', function () {
-      before(function () {
-        var dfd = new $.Deferred();
-        this.$el.savvy(dfd, this.options);
-        dfd.reject();
-      });
-
-      it('replaces $el html with "error" html on error', function () {
-        expect(this.$el.html()).to.equal(this.options.errorContent);
-      });
-
-      it('adds "error" classes to $el on error', function () {
-        expect(this.$el.attr('class')).to.include(this.options.errorClass);
-      });
-
-      it('removes "saving" classes on $el', function () {
-        expect(this.$el.attr('class'))
-          .to.not.include(this.options.savingClass);
-      });
+    it('extends the options hash onto the instance', function () {
+      _.each(this.options, function (val, key) {
+        expect(this[key]).to.equal(val);
+      }, this.savvy);
     });
   });
 
-  describe('$el.savvyReset()', function () {
-    before(function () {
-      this.$el.savvy(new $.Deferred(), this.options);
-      this.$el.savvyReset();
+  describe('Deferred state changes', function () {
+    beforeEach(function () {
+      this.savvy.setDfd(new $.Deferred());
     });
 
-    it('resets $el to its previous html', function () {
-      expect(this.$el.html()).to.equal(this.html);
+    it('sets correct pending class and content', function () {
+      expect(this.savvy.$el.hasClass('js-savvy-pending')).to.be.true;
+      expect(this.savvy.$el.html()).to.equal(this.savvy.pendingContent);
     });
 
-    it('resets $el to its previous classes', function () {
-      expect(this.$el.attr('class')).to.equal(this.classes);
+    it('sets correct done class and content ', function () {
+      this.savvy.dfd.resolve();
+      expect(this.savvy.$el.hasClass('js-savvy-done')).to.be.true;
+      expect(this.savvy.$el.html()).to.equal(this.savvy.doneContent);
+    });
+
+    it('sets correct fail class and content ', function () {
+      this.savvy.dfd.reject();
+      expect(this.savvy.$el.hasClass('js-savvy-fail')).to.be.true;
+      expect(this.savvy.$el.html()).to.equal(this.savvy.failContent);
+    });
+
+    it('returns $el to the previous state after duration', function (done) {
+      this.savvy.dfd.resolve();
+      var self = this;
+      _.delay(function () {
+        expect(self.savvy.$el.html()).to.equal(self.content);
+        expect(self.savvy.$el.attr('class')).to.equal(self.classes);
+        done();
+      }, this.options.duration);
     });
   });
 

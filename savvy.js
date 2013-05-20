@@ -5,62 +5,58 @@
   var $ = window.jQuery;
   var _ = window._;
 
-  var Savvy = window.Savvy = {
-    defaults: {
-      savingContent: 'Saving...',
-      savingClass: 'js-savvy-saving',
-      savedContent: 'Saved',
-      savedClass: 'js-savvy-saved',
-      errorContent: 'Error',
-      errorClass: 'js-savvy-error',
-      duration: -1
-    }
+  var Savvy = window.Savvy = function (el, dfd, options) {
+    _.extend(this, options);
+    this.setElement(el);
+    if (dfd) this.setDfd(dfd);
   };
 
-  $.fn.savvy = function (jqXhr, options) {
-    options = _.extend({}, Savvy.defaults, options);
-    return $(this).savvyReset().each(function () {
-      var $self = $(this);
-      var method = $self.is(':input:not(button)') ? 'val' : 'html';
-      $self
-        .data({
-          savvyJqXhr: jqXhr,
-          savvyContent: $self[method](),
-          savvyClass: $self.attr('class')
-        })
-        .addClass(options.savingClass)[method](options.savingContent);
-      jqXhr
+  _.extend(Savvy.prototype, {
+    pendingContent: '',
+    doneContent: '',
+    failContent: '',
+    duration: -1,
+
+    setElement: function (el) {
+      if (this.$el) this._unbind();
+      this.$el = el instanceof $ ? el : $(el);
+      this.method = this.$el.is(':input:not(button)') ? 'val' : 'html';
+      return this;
+    },
+
+    setDfd: function (dfd) {
+      this.reset();
+      var self = this;
+      var $el = this.$el;
+      var method = this.method;
+      this.storedClass = $el.attr('class');
+      this.storedContent = $el[method]();
+      $el.addClass('js-savvy-pending')[method](self.pendingContent);
+      this.dfd = dfd
         .done(function () {
-          if ($self.data('savvyJqXhr') !== jqXhr) return;
-          $self.addClass(options.savedClass)[method](options.savedContent);
+          if (self.dfd !== dfd) return;
+          $el.addClass('js-savvy-done')[method](self.doneContent);
         })
         .fail(function () {
-          if ($self.data('savvyJqXhr') !== jqXhr) return;
-          $self.addClass(options.errorClass)[method](options.errorContent);
+          if (self.dfd !== dfd) return;
+          $el.addClass('js-savvy-fail')[method](self.failContent);
         })
         .always(function () {
-          if ($self.data('savvyJqXhr') !== jqXhr) return;
-          $self.removeClass(options.savingClass);
-          var duration = options.duration;
+          if (self.dfd !== dfd) return;
+          $el.removeClass('js-savvy-pending');
+          var duration = self.duration;
           if (duration < 0) return;
-          if (duration === 0) return $self.savvyReset();
+          if (duration === 0) return self.reset();
           _.delay(function () {
-            if ($self.data('savvyJqXhr') !== jqXhr) return;
-            $self.savvyReset();
+            if (self.dfd !== dfd) return;
+            self.reset();
           }, duration);
         });
-    });
-  };
+    },
 
-  $.fn.savvyReset = function () {
-    return $(this).each(function () {
-      var $self = $(this);
-      var data = $self.data();
-
-      // If `savvyContent` hasn't been set, there is nothing to do here.
-      if (data.savvyContent == null) return;
-      var method = $self.is(':input:not(button)') ? 'val' : 'html';
-      $self.attr('class', data.savvyClass)[method](data.savvyContent);
-    });
-  };
+    reset: function () {
+      if (this.storedContent == null) return;
+      this.$el.attr('class', this.storedClass)[this.method](this.storedContent);
+    }
+  });
 })();
