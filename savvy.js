@@ -55,7 +55,8 @@
     },
 
     reset: function () {
-      if (this.storedContent == null) return;
+      if (!this.dfd) return;
+      this.dfd = null;
       this.$el.attr('class', this.storedClass)[this.method](this.storedContent);
     }
   });
