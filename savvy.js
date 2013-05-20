@@ -51,12 +51,14 @@
             self.reset();
           }, duration);
         });
+      return this;
     },
 
     reset: function () {
-      if (!this.dfd) return;
+      if (!this.dfd) return this;
       this.dfd = null;
       this.$el.attr('class', this.storedClass)[this.method](this.storedContent);
+      return this;
     }
   });
 })();
