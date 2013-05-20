@@ -1,7 +1,7 @@
 {
-  "name": "rec",
+  "name": "savvy",
   "version": "0.2.1",
-  "main": "rec.js",
+  "main": "savvy.js",
   "ignore": [
     "test",
     "index.html"
