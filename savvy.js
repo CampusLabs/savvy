@@ -18,7 +18,6 @@
     duration: -1,
 
     setElement: function (el) {
-      if (this.$el) this._unbind();
       this.$el = el instanceof $ ? el : $(el);
       this.method = this.$el.is(':input:not(button)') ? 'val' : 'html';
       return this;
