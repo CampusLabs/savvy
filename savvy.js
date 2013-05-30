@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  // Store a local reference to jQuery and Underscorea.
+  // Store a local reference to jQuery and Underscore.
   var $ = window.jQuery;
   var _ = window._;
 
