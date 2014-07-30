@@ -58,7 +58,7 @@
           var url =
             $self.is('.js-bad') ?
             'http://bad.example.com/does-not-exist' :
-            'http://imdbapi.org';
+            'https://api.orgsync.com/api/v3/communities';
           var ajaxOptions = {url: url, data: {limit: 10, q: 'a'}};
           $self.data('savvy').setDfd($.ajax(ajaxOptions));
         };
