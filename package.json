@@ -1,0 +1,15 @@
+{
+  "name": "orgsync-savvy",
+  "version": "0.2.2",
+  "author": "Casey Foster <c@sey.me>",
+  "license": "MIT",
+  "main": "savvy.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orgsync/savvy"
+  },
+  "peerDependencies": {
+    "jquery": "x",
+    "underscore": "x"
+  }
+}
