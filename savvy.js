@@ -1,9 +1,13 @@
-(function () {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery', 'underscore'], factory);
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory(require('jquery'), require('underscore'));
+  } else {
+    root.Savvy = factory(root.jQuery, root._);
+  }
+})(this, function ($, _) {
   'use strict';
-
-  // Store a local reference to jQuery and Underscore.
-  var $ = window.jQuery;
-  var _ = window._;
 
   var Savvy = window.Savvy = function (el, dfd, options) {
     _.extend(this, options);
@@ -61,4 +65,4 @@
       return this;
     }
   });
-})();
+});
