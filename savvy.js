@@ -9,7 +9,7 @@
 })(this, function ($, _) {
   'use strict';
 
-  var Savvy = window.Savvy = function (el, dfd, options) {
+  var Savvy = function (el, dfd, options) {
     _.extend(this, options);
     this.setElement(el);
     if (dfd) this.setDfd(dfd);
@@ -65,4 +65,6 @@
       return this;
     }
   });
+
+  return Savvy;
 });

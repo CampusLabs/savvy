@@ -1,6 +1,6 @@
 {
   "name": "savvy",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "savvy.js",
   "ignore": [
     "test",
